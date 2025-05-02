@@ -1,0 +1,13 @@
+2025-05-02 00:26:48,555 - Failed to fetch data: 405 Client Error:  for url: https://www.cse.lk/api/tradeSummary
+2025-05-02 00:26:48,556 - No data fetched.
+2025-05-02 00:29:36,628 - Failed to fetch data: 405 Client Error:  for url: https://www.cse.lk/api/tradeSummary
+2025-05-02 00:29:36,630 - No data fetched.
+2025-05-02 00:31:18,940 - Saved summary to /Users/trilankasmac/Desktop/Programming/Analyzer/data/2025-05-02-summary.json
+2025-05-02 00:34:57,570 - Unexpected data format
+2025-05-02 00:34:57,571 - S&P SL20 data not found in response.
+2025-05-02 00:38:19,179 - Unexpected data format
+2025-05-02 00:38:19,179 - No S&P SL20 data found in response.
+2025-05-02 00:39:14,131 - Unexpected data format
+2025-05-02 00:39:14,131 - No S&P SL20 data found in response.
+2025-05-02 00:51:20,029 - Filtered 21 S&P SL20 companies.
+2025-05-02 00:51:20,032 - Saved S&P SL20 data to /Users/trilankasmac/Desktop/Programming/Analyzer/data/2025-05-02-sp20.json
