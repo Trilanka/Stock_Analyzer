@@ -3,7 +3,7 @@ from bs4 import BeautifulSoup
 from datetime import datetime
 import json
 import time
-
+import os
 
 CSE_API_URL = "https://www.cse.lk/api/tradeSummary"
 NEWS_URL = "https://economynext.com/more-news/"
@@ -58,16 +58,21 @@ def fetch_news():
 
 
 def save_daily_report(market_data, news_data):
+    
+    folder_name = "daily_reports"
+    if not os.path.exists(folder_name):
+        os.makedirs(folder_name)  # Create folder if it doesn't exist
+    
+    
     full_data = {
         "date": TODAY,
         "market_summary": market_data,
         "news": news_data
     }
-    filename = f"daily_report_{TODAY}.json"
+    
+    filename = os.path.join(folder_name, f"daily_report_{TODAY}.json")
     with open(filename, "w") as f:
         json.dump(full_data, f, indent=2)
-    print(f"[SAVED] Daily report saved to {filename}")
-
 
 if __name__ == "__main__":
     print("[START] Collecting data...")
