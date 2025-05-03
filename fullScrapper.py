@@ -47,7 +47,7 @@ def fetch_news():
             news_list.append({
                 "title": title,
             })
-            time.sleep(1)  # Avoid hitting the server too fast
+            time.sleep(1) 
 
         return news_list
 
@@ -77,5 +77,3 @@ if __name__ == "__main__":
         save_daily_report(market_data, news_data)
     else:
         print("[SKIP] Market data not available. Report not saved.")
-
-    print(news_data)
