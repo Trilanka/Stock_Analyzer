@@ -4,8 +4,7 @@ import os
 
 app = Flask(__name__)
 
-# Define the path to your JSON file
-DATA_PATH = '/path/to/your/json/file.json'  # Replace with your actual file path
+DATA_PATH = '/home/ubuntu/Scrapper/Stock_Analyzer/structured_data/structured_company_data.json' 
 
 @app.route('/api/data', methods=['GET'])
 def get_data():
