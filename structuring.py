@@ -1,36 +1,93 @@
 import os
 import json
+import re
 from collections import defaultdict
 
-DATA_DIR = "/home/ubuntu/Scrapper/Stock_Analyzer/daily_reports"
 
-company_data = defaultdict(lambda: {"company_name": "", "history": []})
+DAILY_REPORTS_FOLDER = "daily_reports"
+STRUCTURED_FOLDER = "structured_data"
 
-for filename in sorted(os.listdir(DATA_DIR)):
-    if filename.endswith(".json"):
-        file_path = os.path.join(DATA_DIR, filename)
-        with open(file_path, "r") as f:
-            data = json.load(f)
-            date = data.get("date", "")
+os.makedirs(STRUCTURED_FOLDER, exist_ok=True)
 
-            market_summary = data.get("market_summary", [])
-            for entry in market_summary:
-                symbol = entry.get("symbol")
-                if not symbol:
+def load_daily_data():
+    daily_data = []
+
+    for filename in os.listdir(DAILY_REPORTS_FOLDER):
+        if filename.endswith(".json"):
+            filepath = os.path.join(DAILY_REPORTS_FOLDER, filename)
+            with open(filepath, "r", encoding="utf-8") as f:
+                try:
+                    data = json.load(f)
+                except json.JSONDecodeError as e:
+                    print(f"❌ Failed to parse {filename}: {e}")
                     continue
-                company_info = company_data[symbol]
-                company_info["company_name"] = entry.get("securityName", "")
-                company_info["history"].append({
-                    "date": date,
-                    "close_price": entry.get("closePrice"),
-                    "volume": entry.get("volume"),
-                    "turnover": entry.get("turnover"),
-                    "no_of_trades": entry.get("noOfTrades"),
-                    "market_cap": entry.get("marketCap")
-                })
 
-# Save final output to one file
-with open("structured_company_data.json", "w") as f:
-    json.dump(company_data, f, indent=2)
+                match = re.search(r"\d{4}-\d{2}-\d{2}", filename)
+                if match:
+                    data["date"] = match.group(0)  
+                    daily_data.append(data)
+                else:
+                    print(f"⚠️ Skipping file with invalid date format: {filename}")
 
-print("[DONE] Data structured and saved to structured_company_data.json")
+    return daily_data
+
+def structure_company_data(daily_data):
+    companies_data = defaultdict(lambda: {
+        "name": "",
+        "symbol": "",
+        "history": [],
+        "related_news": set()
+    })
+
+    for day in daily_data:
+        date = day["date"]
+        market_summary = day.get("market_summary", {})
+        news = day.get("news", [])
+
+        companies = market_summary.get("reqTradeSummery", [])
+        if not isinstance(companies, list):
+            print(f"⚠️ Skipping due to invalid market summary format on {date}")
+            continue
+
+        for company in companies:
+            symbol = company.get("symbol")
+            name = company.get("name")
+            if not symbol:
+                continue
+
+         
+            entry = companies_data[symbol]
+            entry["name"] = name
+            entry["symbol"] = symbol
+            entry["history"].append({
+                "date": date,
+                "price": company.get("price"),
+                "change": company.get("change"),
+                "percentageChange": company.get("percentageChange"),
+                "turnover": company.get("turnover"),
+                "volume": company.get("sharevolume"),
+                "marketCap": company.get("marketCap")
+            })
+
+           
+            for article in news:
+                title = article.get("title")
+                if title:
+                    entry["related_news"].add(title)
+
+   
+    for company in companies_data.values():
+        company["related_news"] = list(company["related_news"])
+
+    return companies_data
+
+def save_structured_data(companies_data):
+    output_path = os.path.join(STRUCTURED_FOLDER, "structured_company_data.json")
+    with open(output_path, "w", encoding="utf-8") as f:
+        json.dump(companies_data, f, indent=2)
+    
+
+if __name__ == "__main__":
+    daily_data = load_daily_data()
+    companies_data = structure_company_data(daily_data)
+    save_structured_data(companies_data)
