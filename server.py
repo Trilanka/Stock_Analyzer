@@ -5,7 +5,7 @@ import os
 
 app = FastAPI()
 
-@app.get("structured_data/structured_company_data.json")
+@app.get("/home/ubuntu/Scrapper/Stock_Analyzer/structured_data/structured_company_data.json")
 def get_summary():
     try:
         file_path = "/home/ubuntu/data/summary.json"
