@@ -6,10 +6,12 @@ app = Flask(__name__)
 
 DATA_PATH = '/home/ubuntu/Scrapper/Stock_Analyzer/structured_data/structured_company_data.json' 
 
-@app.route('/api/data', methods=['GET'])
+@app.route('/')
+def index():
+    return "Flask is running!"
 
+@app.route('/api/data', methods=['GET'])
 def get_data():
-    
     return "Hello, World!"
 
 if __name__ == '__main__':
