@@ -21,64 +21,65 @@ def fetch_cse_summary():
         return None
 
 
-def fetch_news():
-    headers = {
-        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36"
-    }
-    try:
-        response = requests.get(NEWS_URL, headers=headers)
-        response.raise_for_status()
-        soup = BeautifulSoup(response.text, 'html.parser')
+# def fetch_news():
+#     headers = {
+#         "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36"
+#     }
+#     try:
+#         response = requests.get(NEWS_URL, headers=headers)
+#         response.raise_for_status()
+#         soup = BeautifulSoup(response.text, 'html.parser')
 
-        # Select story blocks
-        articles = soup.select("div.story-grid-single-story")
-        news_list = []
+#         articles = soup.select("div.story-grid-single-story")
+#         news_list = []
 
-        for a in articles[:10]:  # Limit to 10 latest
-            title_tag = a.select_one("h3.recent-top-header > a")
-            if not title_tag:
-                continue
-            title = title_tag.get_text(strip=True)
-            url = title_tag['href']
-            if not url.startswith("http"):
-                url = "https://economynext.com" + url  
+#         for a in articles[:10]: 
+#             title_tag = a.select_one("h3.recent-top-header > a")
+#             if not title_tag:
+#                 continue
+#             title = title_tag.get_text(strip=True)
+#             url = title_tag['href']
+#             if not url.startswith("http"):
+#                 url = "https://economynext.com" + url  
 
           
-            news_list.append({
-                "title": title,
-            })
-            time.sleep(1) 
+#             news_list.append({
+#                 "title": title,
+#             })
+#             time.sleep(1) 
 
-        return news_list
+#         return news_list
 
-    except Exception as e:
-        print(f"[ERROR] News scraping failed: {e}")
-        return []
+#     except Exception as e:
+#         print(f"[ERROR] News scraping failed: {e}")
+#         return []
 
 
 
-def save_daily_report(market_data, news_data):
+def save_daily_report(market_data):
     
-    folder_name = "daily_reports"
-    if not os.path.exists(folder_name):
-        os.makedirs(folder_name)  # Create folder if it doesn't exist
+    folder_path = "/home/ubuntu/Scrapper/Stock_Analyzer/daily_reports"
+    os.makedirs(folder_path, exist_ok=True)
+    filename = os.path.join(folder_path, f"{TODAY}.json")
     
+    if os.path.exists(filename):
+        print(f"Report for {TODAY} already exists. Skipping save.")
+        return
     
     full_data = {
         "date": TODAY,
         "market_summary": market_data,
-        "news": news_data
     }
     
-    filename = os.path.join(folder_name, f"daily_report_{TODAY}.json")
     with open(filename, "w") as f:
         json.dump(full_data, f, indent=2)
 
+    print(f"Saved report to {filename}")
+
 if __name__ == "__main__":
-    print("[START] Collecting data...")
     market_data = fetch_cse_summary()
-    news_data = fetch_news()
+    # news_data = fetch_news()
     if market_data:
-        save_daily_report(market_data, news_data)
+        save_daily_report(market_data)
     else:
         print("[SKIP] Market data not available. Report not saved.")
