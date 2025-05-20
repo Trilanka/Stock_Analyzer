@@ -21,7 +21,6 @@ conn = psycopg2.connect(
 cur = conn.cursor()
 
 def parse_date(date_str):
-    """Convert '01/JAN/1984' to '1984-01-01' format"""
     try:
         return datetime.strptime(date_str, "%d/%b/%Y").date()
     except Exception:
@@ -45,7 +44,6 @@ for filename in os.listdir(DATA_FOLDER):
         symbol = entry["symbol"]
         issue_date = parse_date(entry["issueDate"])
 
-        # Insert company (ignore duplicates)
         cur.execute("""
             INSERT INTO company (company_id, name, symbol, issue_date)
             VALUES (%s, %s, %s, %s)
