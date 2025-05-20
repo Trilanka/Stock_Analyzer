@@ -3,7 +3,6 @@ import json
 import psycopg2
 from datetime import datetime
 
-# DB connection config
 DB_NAME = "market"
 DB_USER = "postgres"
 DB_PASSWORD = "abc"  
@@ -55,7 +54,7 @@ for filename in os.listdir(DATA_FOLDER):
 
         # Insert market data (ignore duplicates)
         cur.execute("""
-            INSERT INTO daily_market_data (
+            INSERT INTO daily_market(
                 trade_date, company_id, quantity, percentage_change, change, price,
                 previous_close, high, low, last_traded_time, turnover,
                 share_volume, trade_volume, market_cap, market_cap_percentage,
