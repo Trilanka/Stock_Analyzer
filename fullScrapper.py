@@ -6,7 +6,7 @@ import time
 import os
 
 CSE_API_URL = "https://www.cse.lk/api/tradeSummary"
-NEWS_URL = "https://economynext.com/more-news/"
+
 TODAY = datetime.today().strftime("%Y-%m-%d")
 
 
