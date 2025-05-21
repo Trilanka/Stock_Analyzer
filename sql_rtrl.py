@@ -1,10 +1,12 @@
 from langchain.chains import create_sql_query_chain
 from langchain_community.utilities import SQLDatabase
 from langchain_community.tools import QuerySQLDatabaseTool
-
+from dotenv import load_dotenv
+import os
+load_dotenv()
 from langchain_openai import ChatOpenAI
-
-db = SQLDatabase.from_uri("sqlite:////content/market_data.db")
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+db = SQLDatabase.from_uri("postgresql://postgres:abc@localhost:5432/market")
 
 query_execute = QuerySQLDatabaseTool(db = db)
 
