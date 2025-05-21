@@ -13,7 +13,7 @@ query_execute = QuerySQLDatabaseTool(db = db)
 llm = ChatOpenAI(model="gpt-3.5-turbo", temperature=0)
 chain = create_sql_query_chain(llm, db)
 
-template = chain.invoke({"question": "How LIOC doing?"})
+template = chain.invoke({"question": "How LIOC doing in last few days?"})
 print(template)
 data_retreive = query_execute.invoke(template)
 print("")
