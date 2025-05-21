@@ -74,4 +74,4 @@ for filename in os.listdir(DATA_FOLDER):
 conn.commit()
 cur.close()
 conn.close()
-print("✅ Data import completed.")
+print(f"✅ Data import completed for the trade date - {trade_date}")
