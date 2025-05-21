@@ -16,5 +16,6 @@ chain = create_sql_query_chain(llm, db)
 template = chain.invoke({"question": "How LIOC doing?"})
 print(template)
 data_retreive = query_execute.invoke(template)
-
+print("")
 print(data_retreive)
+
