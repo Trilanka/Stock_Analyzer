@@ -1,14 +1,14 @@
 import requests
 from bs4 import BeautifulSoup
-import datetime
+from datetime import datetime
 import os
 import json
-from datetime import datetime
+import datetime
 
 BASE_URL = "https://economynext.com"
 SECTION_URL = f"{BASE_URL}/finance/"
-TODAY = datetime.datetime.now().strftime("%B %d, %Y")  # e.g., "May 22, 2025"
-DATE_FILENAME = datetime.datetime.now().strftime("%Y-%m-%d")
+TODAY = datetime.now().strftime("%B %d, %Y")  # e.g., "May 22, 2025"
+DATE_FILENAME = datetime.now().strftime("%Y-%m-%d")
 NEWS_FOLDER = "news"
 OUTPUT_FILE = f"{NEWS_FOLDER}/{DATE_FILENAME}.json"
 
