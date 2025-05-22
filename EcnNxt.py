@@ -129,7 +129,9 @@ for link in article_links:
     articles.append(article_data)
 
 # Save to JSON file
-with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
-  json.dump(articles, f, ensure_ascii=False, indent=4)
-
-print(f"Saved {len(articles)} article(s) to {OUTPUT_FILE}")
+if os.path.exists(OUTPUT_FILE):
+    print(f"⚠️ File '{OUTPUT_FILE}' already exists. Skipping save to avoid overwrite.")
+else:
+    with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
+        json.dump(articles, f, ensure_ascii=False, indent=4)
+    print(f"✅ Saved {len(articles)} article(s) to {OUTPUT_FILE}")
