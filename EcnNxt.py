@@ -3,7 +3,6 @@ from bs4 import BeautifulSoup
 from datetime import datetime
 import os
 import json
-import datetime
 
 BASE_URL = "https://economynext.com"
 SECTION_URL = f"{BASE_URL}/finance/"
