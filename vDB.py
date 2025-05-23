@@ -1,25 +1,29 @@
 import os
 import json
+import openai
 import chromadb
 from chromadb.config import Settings
+from dotenv import load_dotenv
 
-# Path to the folder containing your daily JSON files
+load_dotenv()
+openai.api_key = os.getenv("OPENAI_API_KEY")
+
+embedding_model = "text-embedding-ada-002"
 JSON_FOLDER = "/home/ubuntu/Scrapper/Stock_Analyzer/news"
 
-# Setup ChromaDB client
 chroma_client = chromadb.Client(Settings(
-    persist_directory="/home/ubuntu/chromaDB",  # Folder to persist vector DB
+    persist_directory="/home/ubuntu/chromaDB",
     anonymized_telemetry=False
 ))
 
-# Create or get a collection
 collection = chroma_client.get_or_create_collection(name="daily_news")
 
-# Get already inserted document IDs
-existing_ids = set(collection.get(include=["metadatas"])["metadatas"])
-existing_dates = {meta["date"] for meta in existing_ids if "date" in meta}
+existing_dates = set()
+existing = collection.get(include=["metadatas"])
+for meta in existing["metadatas"]:
+    if meta and "date" in meta:
+        existing_dates.add(meta["date"])
 
-# Iterate through JSON files in the folder
 for filename in os.listdir(JSON_FOLDER):
     if not filename.endswith(".json"):
         continue
@@ -35,10 +39,22 @@ for filename in os.listdir(JSON_FOLDER):
             data = json.load(f)
 
         for idx, item in enumerate(data):
+            content = item["article_content"]
+            embedding_response = openai.Embedding.create(
+                input=[content],
+                model=embedding_model
+            )
+            vector = embedding_response["data"][0]["embedding"]
+
             doc_id = f"{file_date}-{idx}"
             collection.add(
-                documents=[item["article_content"]],
-                metadatas=[{"date": item["date"], "title": item["article_title"], "filename": filename}],
+                embeddings=[vector],
+                documents=[content],
+                metadatas=[{
+                    "date": item["date"],
+                    "title": item["article_title"],
+                    "filename": filename
+                }],
                 ids=[doc_id]
             )
             print(f"Stored article from {filename} with ID {doc_id}")
@@ -46,5 +62,4 @@ for filename in os.listdir(JSON_FOLDER):
     except Exception as e:
         print(f"Failed to process {filename}: {e}")
 
-# Persist changes
 chroma_client.persist()
