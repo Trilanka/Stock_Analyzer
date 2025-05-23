@@ -62,7 +62,5 @@ for filename in os.listdir(JSON_FOLDER):
     except Exception as e:
         print(f"Failed to process {filename}: {e}")
 
-try:
-    chroma_client.persist()
-except AttributeError:
-    pass  
+
+chroma_client.persist()
