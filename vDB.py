@@ -16,7 +16,7 @@ chroma_client = chromadb.Client(Settings(
 collection = chroma_client.get_or_create_collection(name="daily_news")
 
 # Get already inserted document IDs
-existing_ids = set(collection.get(ids=[], include=["metadatas"])["metadatas"])
+existing_ids = set(collection.get(include=["metadatas"])["metadatas"])
 existing_dates = {meta["date"] for meta in existing_ids if "date" in meta}
 
 # Iterate through JSON files in the folder
