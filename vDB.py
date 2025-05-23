@@ -11,11 +11,7 @@ client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 embedding_model = "text-embedding-ada-002"
 JSON_FOLDER = "/home/ubuntu/Scrapper/Stock_Analyzer/news"
 
-chroma_client = chromadb.Client(Settings(
-    persist_directory="/home/ubuntu/chromaDB",
-    anonymized_telemetry=False
-))
-
+chroma_client = chromadb.PersistentClient(path="/home/ubuntu/chromaDB")
 collection = chroma_client.get_or_create_collection(name="daily_news")
 
 existing_dates = set()
@@ -63,4 +59,3 @@ for filename in os.listdir(JSON_FOLDER):
         print(f"Failed to process {filename}: {e}")
 
 
-chroma_client.persist()
