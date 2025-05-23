@@ -4,7 +4,7 @@ import chromadb
 from chromadb.config import Settings
 
 # Path to the folder containing your daily JSON files
-JSON_FOLDER = "/home/ubuntu/Scrapper?Stock_Analyzer/news"
+JSON_FOLDER = "/home/ubuntu/Scrapper/Stock_Analyzer/news"
 
 # Setup ChromaDB client
 chroma_client = chromadb.Client(Settings(
