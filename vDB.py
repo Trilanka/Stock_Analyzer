@@ -1,12 +1,12 @@
 import os
 import json
-import openai
+from openai import OpenAI
 import chromadb
 from chromadb.config import Settings
 from dotenv import load_dotenv
 
 load_dotenv()
-openai.api_key = os.getenv("OPENAI_API_KEY")
+client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 embedding_model = "text-embedding-ada-002"
 JSON_FOLDER = "/home/ubuntu/Scrapper/Stock_Analyzer/news"
@@ -40,11 +40,11 @@ for filename in os.listdir(JSON_FOLDER):
 
         for idx, item in enumerate(data):
             content = item["article_content"]
-            embedding_response = openai.Embedding.create(
+            response = client.embeddings.create(
                 input=[content],
                 model=embedding_model
             )
-            vector = embedding_response["data"][0]["embedding"]
+            vector = response.data[0].embedding
 
             doc_id = f"{file_date}-{idx}"
             collection.add(
@@ -62,4 +62,7 @@ for filename in os.listdir(JSON_FOLDER):
     except Exception as e:
         print(f"Failed to process {filename}: {e}")
 
-chroma_client.persist()
+try:
+    chroma_client.persist()
+except AttributeError:
+    pass  
