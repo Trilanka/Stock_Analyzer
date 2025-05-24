@@ -6,12 +6,13 @@ from chromadb.config import Settings
 from dotenv import load_dotenv
 
 load_dotenv()
-client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+
+client = OpenAI()
 
 embedding_model = "text-embedding-ada-002"
 JSON_FOLDER = "/home/ubuntu/Scrapper/Stock_Analyzer/news"
 
-chroma_client = chromadb.PersistentClient(path="/home/ubuntu/chromaDB")
+chroma_client = chromadb.PersistentClient(path="/home/ubuntu/Scrapper/Stock_Analyzer/chromaDB")
 collection = chroma_client.get_or_create_collection(name="daily_news")
 
 existing_dates = set()
@@ -57,5 +58,6 @@ for filename in os.listdir(JSON_FOLDER):
 
     except Exception as e:
         print(f"Failed to process {filename}: {e}")
+
 
 
