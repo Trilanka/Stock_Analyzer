@@ -13,8 +13,8 @@ client = OpenAI()
 embedding_model = "text-embedding-ada-002"
 
 # Paths
-JSON_FOLDER = "/home/ubuntu/Scrapper/Stock_Analyzer/news"
-CHROMA_PATH = "/home/ubuntu/Scrapper/Stock_Analyzer/chromaDB"
+JSON_FOLDER = "/home/ubuntu/news"
+CHROMA_PATH = "/home/ubuntu/chromaDB"
 TODAY = datetime.now().strftime("%Y-%m-%d")
 TODAY_FILE = f"{TODAY}.json"
 FILE_PATH = os.path.join(JSON_FOLDER, TODAY_FILE)
@@ -34,7 +34,6 @@ for idx, meta in enumerate(existing["metadatas"]):
 if not os.path.exists(FILE_PATH):
     print(f"⚠️ No file found for today: {TODAY_FILE}. Skipping.")
 else:
-    print(f"📰 Processing {TODAY_FILE}...")
     try:
         with open(FILE_PATH, "r", encoding="utf-8") as f:
             articles = json.load(f)
