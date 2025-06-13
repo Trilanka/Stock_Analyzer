@@ -25,7 +25,7 @@ collection = chroma_client.get_or_create_collection(name="daily_news")
 
 # Check if today's file is already processed
 existing_ids = set()
-existing = collection.get(include=["ids", "metadatas"])
+existing = collection.get(include=["metadatas"])
 for idx, meta in enumerate(existing["metadatas"]):
     if meta and meta.get("filename") == TODAY_FILE:
         existing_ids.add(existing["ids"][idx])
